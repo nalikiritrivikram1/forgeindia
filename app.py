@@ -408,16 +408,9 @@ class App(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
-        if path == "/" or path == "/index.html":
-            body = (ROOT / "index.html").read_bytes()
-            self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
-            self.wfile.write(body)
-            return
-        if path == "/landing.html":
-            body = (ROOT / "landing.html").read_bytes()
+        if path == "/" or path == "/index.html" or path == "/landing.html":
+            page = ROOT / ("index.html" if path == "/index.html" and (ROOT / "index.html").exists() else "landing.html")
+            body = page.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
