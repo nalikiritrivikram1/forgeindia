@@ -71,7 +71,44 @@ def send_email(conn, to_email, subject, body):
     gmail_user = (os.environ.get("GMAIL_USER") or "").strip()
     gmail_pass = (os.environ.get("GMAIL_APP_PASSWORD") or "").replace(" ", "").strip()
     sender_name = (os.environ.get("MAIL_FROM_NAME") or "FORGE India").strip()
-    if gmail_user and gmail_pass:
+    resend_key = (os.environ.get("RESEND_API_KEY") or "").strip()
+    resend_from = (os.environ.get("MAIL_FROM_EMAIL") or "").strip()
+    if resend_key and resend_from:
+        try:
+            payload = json.dumps(
+                {
+                    "from": resend_from,
+                    "to": [to_email],
+                    "subject": subject,
+                    "text": body,
+                }
+            ).encode()
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=payload,
+                headers={
+                    "Authorization": f"Bearer {resend_key}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=20) as res:
+                res.read()
+            status = "sent"
+        except urllib.error.HTTPError as exc:
+            status = "failed"
+            details = exc.read().decode(errors="ignore")
+            error = f"Resend HTTP {exc.code}: {details}"[:500]
+            print(f"MAIL_FAILED to={to_email} provider=resend subject={subject!r} error={error}", flush=True)
+        except Exception as exc:
+            status = "failed"
+            error = f"Resend error: {str(exc)}"[:500]
+            print(f"MAIL_FAILED to={to_email} provider=resend subject={subject!r} error={error}", flush=True)
+    elif resend_key and not resend_from:
+        status = "failed"
+        error = "RESEND_API_KEY is set but MAIL_FROM_EMAIL is missing"
+        print(f"MAIL_FAILED to={to_email} provider=resend error={error}", flush=True)
+    if status == "queued" and gmail_user and gmail_pass:
         try:
             msg = EmailMessage()
             msg["From"] = formataddr((sender_name, gmail_user))
@@ -87,7 +124,7 @@ def send_email(conn, to_email, subject, body):
             status = "failed"
             error = str(exc)[:500]
             print(f"MAIL_FAILED to={to_email} subject={subject!r} error={error}", flush=True)
-    else:
+    elif status == "queued" and not resend_key:
         status = "demo_logged"
         missing = ",".join(k for k, v in {"GMAIL_USER": gmail_user, "GMAIL_APP_PASSWORD": gmail_pass}.items() if not v)
         print(f"MAIL_DEMO_LOGGED to={to_email} missing={missing}", flush=True)
