@@ -10,6 +10,7 @@ import time
 import urllib.error
 import urllib.request
 from email.message import EmailMessage
+from email.utils import formataddr
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -67,12 +68,14 @@ def create_session(conn, user_id):
 def send_email(conn, to_email, subject, body):
     status = "queued"
     error = ""
-    gmail_user = os.environ.get("GMAIL_USER")
-    gmail_pass = os.environ.get("GMAIL_APP_PASSWORD")
+    gmail_user = (os.environ.get("GMAIL_USER") or "").strip()
+    gmail_pass = (os.environ.get("GMAIL_APP_PASSWORD") or "").replace(" ", "").strip()
+    sender_name = (os.environ.get("MAIL_FROM_NAME") or "FORGE India").strip()
     if gmail_user and gmail_pass:
         try:
             msg = EmailMessage()
-            msg["From"] = gmail_user
+            msg["From"] = formataddr((sender_name, gmail_user))
+            msg["Reply-To"] = gmail_user
             msg["To"] = to_email
             msg["Subject"] = subject
             msg.set_content(body)
@@ -83,12 +86,16 @@ def send_email(conn, to_email, subject, body):
         except Exception as exc:
             status = "failed"
             error = str(exc)[:500]
+            print(f"MAIL_FAILED to={to_email} subject={subject!r} error={error}", flush=True)
     else:
         status = "demo_logged"
+        missing = ",".join(k for k, v in {"GMAIL_USER": gmail_user, "GMAIL_APP_PASSWORD": gmail_pass}.items() if not v)
+        print(f"MAIL_DEMO_LOGGED to={to_email} missing={missing}", flush=True)
     conn.execute(
         "INSERT INTO outbox(id,to_email,subject,body,status,error,created_at) VALUES(?,?,?,?,?,?,?)",
         (uid("mail"), to_email, subject, body, status, error, now()),
     )
+    print(f"MAIL_STATUS to={to_email} status={status}", flush=True)
     return status
 
 
@@ -571,8 +578,8 @@ Build boldly,
 FORGE India
 """,
                     )
-                    admin_email = os.environ.get("ADMIN_NOTIFY_EMAIL")
-                    if admin_email:
+                    admin_email = (os.environ.get("ADMIN_NOTIFY_EMAIL") or "").strip()
+                    if admin_email and admin_email.lower() != email:
                         send_email(
                             conn,
                             admin_email,
