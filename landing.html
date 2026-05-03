@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE — Where Founders Build Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF5A00;
+    --orange-dim: #CC4800;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --card: #161616;
+    --border: #2A2A2A;
+    --muted: #555555;
+    --text: #E8E8E8;
+    --white: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 5vw;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+  .nav-logo span { color: var(--orange); }
+
+  nav a.nav-cta {
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  nav a.nav-cta:hover { background: var(--orange-dim); }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rem 5vw 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .hero-accent {
+    position: absolute;
+    right: -10vw;
+    top: 15%;
+    width: 55vw;
+    height: 55vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,90,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--orange);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 11vw, 10rem);
+    line-height: 0.92;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    max-width: 14ch;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 .accent { color: var(--orange); }
+
+  .hero-sub {
+    margin-top: 2.5rem;
+    font-size: 1.15rem;
+    color: #999;
+    max-width: 44ch;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-actions {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-primary {
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1rem 2.2rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1rem 2.2rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+  .hero-stats {
+    margin-top: 5rem;
+    display: flex;
+    gap: 3rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2.5rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .stat-num span { color: var(--orange); }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+
+  /* ---- SECTION BASE ---- */
+  section {
+    padding: 7rem 5vw;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    color: var(--white);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- PROBLEM ---- */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid var(--border);
+  }
+  .problem-item {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .problem-item:nth-child(2n) { border-right: none; }
+  .problem-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .problem-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .problem-item h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+  .problem-item p { font-size: 0.9rem; color: #777; line-height: 1.6; }
+
+  /* ---- WHAT YOU GET ---- */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 4rem;
+  }
+  .feature-card {
+    background: var(--dark);
+    padding: 2.8rem 2.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .feature-card:hover { background: var(--card); }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--orange);
+    transition: height 0.3s;
+  }
+  .feature-card:hover::before { height: 100%; }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.8rem;
+    color: var(--orange);
+    font-size: 1.2rem;
+  }
+
+  .feature-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.8rem;
+  }
+  .feature-card p { font-size: 0.88rem; color: #777; line-height: 1.65; }
+
+  /* ---- HOW IT WORKS ---- */
+  .steps {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid var(--border);
+    align-items: stretch;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--border);
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    transition: color 0.2s;
+  }
+  .step:hover .step-num { color: var(--orange); }
+  .step-content { padding: 2rem 2.2rem; }
+  .step-content h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .step-content p { font-size: 0.87rem; color: #777; }
+
+  /* ---- APPLY FORM ---- */
+  .apply-section {
+    background: var(--dark);
+  }
+  .apply-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .apply-inner .section-title { text-align: center; }
+  .apply-inner .section-tag { text-align: center; }
+  .apply-sub {
+    text-align: center;
+    color: #777;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+
+  form {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input, select, textarea {
+    background: var(--black);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--orange);
+  }
+  input::placeholder, textarea::placeholder { color: #444; }
+  select { appearance: none; cursor: pointer; }
+  textarea { resize: vertical; min-height: 100px; }
+
+  select option { background: var(--black); }
+
+  .form-submit {
+    margin-top: 0.5rem;
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1.1rem 2rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    width: 100%;
+  }
+  .form-submit:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  .form-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 1rem;
+  }
+
+  /* ---- SUCCESS STATE ---- */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+    border: 1px solid var(--orange);
+    margin-top: 2rem;
+  }
+  .success-msg h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--orange);
+    letter-spacing: 0.04em;
+  }
+  .success-msg p { color: #999; margin-top: 0.5rem; font-size: 0.9rem; }
+
+  .form-status {
+    min-height: 1.4rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #888;
+    margin-top: 1rem;
+  }
+  .form-status.error { color: #ff7b45; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+  .footer-logo span { color: var(--orange); }
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+  }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy {
+    font-size: 0.78rem;
+    color: #444;
+    width: 100%;
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag { animation: fadeUp 0.5s ease both; }
+  .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 768px) {
+    .problem-grid { grid-template-columns: 1fr; }
+    .problem-item { border-right: none !important; }
+    .problem-item:last-child { border-bottom: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 60px 1fr; }
+    nav a.nav-cta { display: none; }
+    footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">FORGE<span>.</span></div>
+  <a class="nav-cta" href="#apply">Apply to Join</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-tag">India's Founder Community — Day 1</div>
+  <h1>Stop<br>Building<br><span class="accent">Alone.</span></h1>
+  <p class="hero-sub">FORGE is where India's founders meet their co-founders, discover hackathons, and turn ideas into real companies — together.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#apply">Apply to Join</a>
+    <a class="btn-ghost" href="#how">How It Works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">85<span>%</span></div>
+      <div class="stat-label">Founders struggle to find the right co-founder</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Day <span>1</span></div>
+      <div class="stat-label">You're early. That means something.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>0</span></div>
+      <div class="stat-label">Cost to join</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section>
+  <div class="section-tag">The Problem</div>
+  <div class="section-title">Why Great Ideas Die</div>
+  <div class="problem-grid">
+    <div class="problem-item">
+      <div class="problem-num">01</div>
+      <h3>No co-founder</h3>
+      <p>The best ideas need more than one person. Solo founders burn out. Teams ship.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">02</div>
+      <h3>Isolated building</h3>
+      <p>No feedback, no accountability, no one to call at 2am when everything breaks.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">03</div>
+      <h3>Missed opportunities</h3>
+      <p>Hackathons, grants, and competitions go by unnoticed. No one to share them.</p>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">04</div>
+      <h3>Ideas stay ideas</h3>
+      <p>Without the right people and resources, execution never happens. FORGE fixes this.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="section-tag">What You Get</div>
+  <div class="section-title">Everything a<br>Founder Needs</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Co-Founder Matching</h3>
+      <p>Find your technical partner, your business co-founder, or the designer who makes your product real. Filter by skill, city, and domain.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      </div>
+      <h3>Hackathons & Events</h3>
+      <p>Every competition, grant, and opportunity — curated and shared the moment it drops. Never miss a deadline again.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h3>Equity Partnerships</h3>
+      <p>Not just connections — real collaborations with structured equity frameworks. Build companies, not just contacts.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3>Founder Meetups</h3>
+      <p>Virtual and in-person events sponsored and organized by FORGE. Real conversations, real connections, real progress.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3>Idea Validation</h3>
+      <p>Get brutal, honest feedback from people who are actually building — not family, not friends. Real founders, real feedback.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h3>College Chapters</h3>
+      <p>FORGE inside your campus. Connect with ambitious students building the next generation of Indian startups.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-tag">The Process</div>
+  <div class="section-title">How FORGE Works</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Apply with what you're building</h3>
+        <p>Tell us your idea, your skills, and what kind of co-founder you're looking for. Takes 2 minutes.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Get personally onboarded</h3>
+        <p>Every founder is onboarded individually. We match you with relevant people before you even join the main community.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Connect with matched founders</h3>
+        <p>Direct introductions to founders whose skills, goals, and domains complement yours. No noise, no random networking.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h3>Build together with equity frameworks</h3>
+        <p>When you're ready to partner up, FORGE provides equity templates, vesting frameworks, and founder agreements.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <h3>Turn your idea into a real company</h3>
+        <p>With the right co-founder, the right resources, and the right community — ideas become companies.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLY FORM -->
+<section id="apply" class="apply-section">
+  <div class="apply-inner">
+    <div class="section-tag">Join FORGE</div>
+    <div class="section-title">Apply to<br>the Community</div>
+    <p class="apply-sub">We personally onboard every founder. Fill this in — we'll get back to you within 24 hours.</p>
+
+    <form id="applyForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="Rahul Sharma" autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" name="city" placeholder="Chennai" autocomplete="address-level2" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label>Instagram Handle</label>
+          <input type="text" name="instagram" placeholder="@yourhandle">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>What are you building?</label>
+        <textarea name="idea" placeholder="Describe your idea in 2-3 lines. Even if it's early stage — that's fine." required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Primary Skill</label>
+          <select name="primary_skill" required>
+            <option value="" disabled selected>Select your skill</option>
+            <option>Developer / Engineer</option>
+            <option>Designer / Product</option>
+            <option>Business / Sales</option>
+            <option>Marketing / Growth</option>
+            <option>Finance / Operations</option>
+            <option>Domain Expert</option>
+            <option>Still figuring out</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Co-founder type you need</label>
+          <select name="looking_for">
+            <option value="" disabled selected>Looking for...</option>
+            <option>Technical co-founder</option>
+            <option>Business co-founder</option>
+            <option>Designer / Product</option>
+            <option>Marketing / Growth</option>
+            <option>Not looking yet — just the community</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="form-submit">Apply to Join FORGE →</button>
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      <p class="form-note">Serious founders only. We review every application personally.</p>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      <h3>Application Received 🔥</h3>
+      <p>We'll reach out personally within 24 hours. Welcome to FORGE.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FORGE<span>.</span></div>
+  <div class="footer-links">
+    <a href="#apply">Join</a>
+    <a href="https://instagram.com/forge.india" target="_blank">Instagram</a>
+    <a href="#how">How It Works</a>
+  </div>
+  <div class="footer-copy">© 2026 FORGE — India's Founder Community. Built by founders, for founders.</div>
+</footer>
+
+<script>
+  const API_BASE = window.FORGE_API_BASE || '';
+
+  document.getElementById('applyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = this;
+    const button = form.querySelector('button[type="submit"]');
+    const status = document.getElementById('formStatus');
+    const payload = Object.fromEntries(new FormData(form).entries());
+    payload.source = 'forge-landing';
+
+    status.textContent = 'Submitting...';
+    status.classList.remove('error');
+    button.disabled = true;
+    button.textContent = 'Submitting...';
+
+    try {
+      const response = await fetch(`${API_BASE}/api/landing/apply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Application could not be submitted');
+
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    } catch (error) {
+      status.textContent = error.message || 'Something went wrong. Please try again.';
+      status.classList.add('error');
+      button.disabled = false;
+      button.textContent = 'Apply to Join FORGE →';
+    }
+  });
+</script>
+
+</body>
+</html>
