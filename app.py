@@ -89,6 +89,7 @@ def send_email(conn, to_email, subject, body):
                 headers={
                     "Authorization": f"Bearer {resend_key}",
                     "Content-Type": "application/json",
+                    "User-Agent": "forge-india/1.0",
                 },
                 method="POST",
             )
