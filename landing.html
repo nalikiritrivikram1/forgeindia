@@ -166,7 +166,7 @@
       <h2 class="mt-4 font-display text-5xl md:text-6xl font-black leading-[1]">Where do you want your business to go?</h2>
       <p class="mt-6 max-w-md text-lg text-ink/75">Share a bit about your business. We reply within 24 hours with a clear next step — no pressure, no jargon.</p>
       <ul class="mt-10 space-y-5 text-sm">
-        <li class="flex gap-3"><span class="text-terracotta">✉</span> <a href="mailto:forgeindiaoff@gmail.com" class="font-medium hover:text-terracotta">forgeindiaoff@gmail.com</a></li>
+        <li class="flex gap-3"><span class="text-terracotta">✉</span> <a href="mailto:info@forgeindia.site" class="font-medium hover:text-terracotta">info@forgeindia.site</a></li>
         <li class="flex gap-3"><span class="text-terracotta">⌾</span> <span class="font-medium">forgeindia.site</span></li>
         <li class="flex gap-3"><span class="text-terracotta">◉</span> <span class="font-medium">Serving local businesses across India</span></li>
       </ul>
@@ -220,7 +220,7 @@
       <div>
         <h4 class="text-xs font-semibold uppercase tracking-widest text-cream/50">Reach us</h4>
         <ul class="mt-4 space-y-2 text-sm">
-          <li><a href="mailto:forgeindiaoff@gmail.com" class="hover:text-terracotta">forgeindiaoff@gmail.com</a></li>
+          <li><a href="mailto:info@forgeindia.site" class="hover:text-terracotta">info@forgeindia.site</a></li>
           <li class="text-cream/70">forgeindia.site</li>
         </ul>
       </div>
@@ -310,7 +310,7 @@
     if (!data.name || !data.email) return showToast("Please enter your name and email.", false);
     // Mailto fallback — opens user's email client with the enquiry pre-filled.
     const body = `Name: ${data.name}%0D%0ABusiness: ${data.business||'-'}%0D%0AEmail: ${data.email}%0D%0APhone: ${data.phone||'-'}%0D%0A%0D%0A${(data.message||'').replace(/\n/g,'%0D%0A')}`;
-    window.location.href = `mailto:forgeindiaoff@gmail.com?subject=New enquiry from ${encodeURIComponent(data.name)}&body=${body}`;
+    window.location.href = `mailto:info@forgeindia.site?subject=New enquiry from ${encodeURIComponent(data.name)}&body=${body}`;
     showToast("Opening your email app — thanks!");
     e.target.reset();
   });
