@@ -304,15 +304,30 @@
     setTimeout(()=>t.classList.remove('show'), 3200);
   }
 
-  document.getElementById('lead-form').addEventListener('submit', (e) => {
+  document.getElementById('lead-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target).entries());
+    const form = e.target;
+    const button = form.querySelector('button[type="submit"]');
+    const data = Object.fromEntries(new FormData(form).entries());
     if (!data.name || !data.email) return showToast("Please enter your name and email.", false);
-    // Mailto fallback — opens user's email client with the enquiry pre-filled.
-    const body = `Name: ${data.name}%0D%0ABusiness: ${data.business||'-'}%0D%0AEmail: ${data.email}%0D%0APhone: ${data.phone||'-'}%0D%0A%0D%0A${(data.message||'').replace(/\n/g,'%0D%0A')}`;
-    window.location.href = `mailto:info@forgeindia.site?subject=New enquiry from ${encodeURIComponent(data.name)}&body=${body}`;
-    showToast("Opening your email app — thanks!");
-    e.target.reset();
+    button.disabled = true;
+    button.textContent = 'Sending...';
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Message could not be sent.');
+      showToast("Message sent. Please check your email for confirmation.");
+      form.reset();
+    } catch (error) {
+      showToast(error.message || "Message could not be sent. Please email info@forgeindia.site.", false);
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Send message';
+    }
   });
 </script>
 </body>

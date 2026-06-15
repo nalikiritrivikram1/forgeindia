@@ -69,12 +69,39 @@ def create_session(conn, user_id):
 def send_email(conn, to_email, subject, body):
     status = "queued"
     error = ""
+    smtp_host = (os.environ.get("SMTP_HOST") or "").strip()
+    smtp_port = int(os.environ.get("SMTP_PORT", "465"))
+    smtp_user = (os.environ.get("SMTP_USER") or "").strip()
+    smtp_pass = (os.environ.get("SMTP_PASSWORD") or "").replace(" ", "").strip()
     gmail_user = (os.environ.get("GMAIL_USER") or "").strip()
     gmail_pass = (os.environ.get("GMAIL_APP_PASSWORD") or "").replace(" ", "").strip()
     sender_name = (os.environ.get("MAIL_FROM_NAME") or "FORGE India").strip()
+    from_email = (os.environ.get("MAIL_FROM_EMAIL") or smtp_user or gmail_user).strip()
     resend_key = (os.environ.get("RESEND_API_KEY") or "").strip()
-    resend_from = (os.environ.get("MAIL_FROM_EMAIL") or "").strip()
-    if resend_key and resend_from:
+    resend_from = from_email
+    if smtp_host and smtp_user and smtp_pass:
+        try:
+            msg = EmailMessage()
+            msg["From"] = formataddr((sender_name, from_email))
+            msg["Reply-To"] = from_email
+            msg["To"] = to_email
+            msg["Subject"] = subject
+            msg.set_content(body)
+            if smtp_port == 465:
+                with smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=20) as smtp:
+                    smtp.login(smtp_user, smtp_pass)
+                    smtp.send_message(msg)
+            else:
+                with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as smtp:
+                    smtp.starttls()
+                    smtp.login(smtp_user, smtp_pass)
+                    smtp.send_message(msg)
+            status = "sent"
+        except Exception as exc:
+            status = "failed"
+            error = f"SMTP error: {str(exc)}"[:500]
+            print(f"MAIL_FAILED to={to_email} provider=smtp subject={subject!r} error={error}", flush=True)
+    if status == "queued" and resend_key and resend_from:
         try:
             payload = json.dumps(
                 {
@@ -106,7 +133,7 @@ def send_email(conn, to_email, subject, body):
             status = "failed"
             error = f"Resend error: {str(exc)}"[:500]
             print(f"MAIL_FAILED to={to_email} provider=resend subject={subject!r} error={error}", flush=True)
-    elif resend_key and not resend_from:
+    elif status == "queued" and resend_key and not resend_from:
         status = "failed"
         error = "RESEND_API_KEY is set but MAIL_FROM_EMAIL is missing"
         print(f"MAIL_FAILED to={to_email} provider=resend error={error}", flush=True)
@@ -559,6 +586,73 @@ class App(BaseHTTPRequestHandler):
             return
         with db() as conn:
             try:
+                if path == "/api/contact":
+                    name = str(data.get("name", "")).strip()
+                    business = str(data.get("business", "")).strip()
+                    email = str(data.get("email", "")).strip().lower()
+                    phone = str(data.get("phone", "")).strip()
+                    message = str(data.get("message", "")).strip()
+                    if not name or "@" not in email:
+                        self.respond(400, {"error": "Name and a valid email are required"})
+                        return
+
+                    contact_to = (
+                        os.environ.get("CONTACT_TO_EMAIL")
+                        or os.environ.get("ADMIN_NOTIFY_EMAIL")
+                        or os.environ.get("MAIL_FROM_EMAIL")
+                        or "info@forgeindia.site"
+                    ).strip()
+                    enquiry_body = f"""New FORGE enquiry
+
+Name: {name}
+Business: {business or "-"}
+Email: {email}
+Phone / WhatsApp: {phone or "-"}
+
+Message:
+{message or "-"}
+"""
+                    auto_reply_body = f"""Hi {name},
+
+Thank you for contacting FORGE India.
+
+We received your enquiry and our team will review it shortly. We usually reply within 24 hours with a clear next step for your business.
+
+Your submitted details:
+Business: {business or "-"}
+Phone / WhatsApp: {phone or "-"}
+Message: {message or "-"}
+
+Regards,
+FORGE India
+info@forgeindia.site
+"""
+                    user_mail_status = send_email(
+                        conn,
+                        email,
+                        "We received your enquiry - FORGE India",
+                        auto_reply_body,
+                    )
+                    admin_mail_status = send_email(
+                        conn,
+                        contact_to,
+                        f"New FORGE enquiry: {name}",
+                        enquiry_body,
+                    )
+                    conn.commit()
+                    if "failed" in (user_mail_status, admin_mail_status):
+                        self.respond(
+                            502,
+                            {
+                                "error": "Your enquiry was received, but email delivery failed. Please email info@forgeindia.site directly.",
+                                "user_mail_status": user_mail_status,
+                                "admin_mail_status": admin_mail_status,
+                            },
+                        )
+                        return
+                    self.respond(200, {"ok": True, "mail_status": user_mail_status, "admin_mail_status": admin_mail_status})
+                    return
+
                 if path == "/api/landing/apply":
                     required = ["name", "city", "email", "idea", "primary_skill"]
                     clean = {k: str(data.get(k, "")).strip() for k in required}
