@@ -1,806 +1,319 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORGE — Where Founders Build Together</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FORGE — We Manage. You Create.</title>
+<meta name="description" content="FORGE is a business growth partner for local businesses across India. Strategy, branding, technology and marketing — built to work together." />
+<meta name="theme-color" content="#c4654a" />
+<meta property="og:title" content="FORGE — We Manage. You Create." />
+<meta property="og:description" content="A business growth partner built for local businesses across India." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+        colors: {
+          terracotta: '#c4654a',
+          peach: '#e8a87c',
+          sage: '#87a878',
+          forest: '#4a6741',
+          cream: '#faf6ef',
+          ink: '#2a1f1a',
+          border: '#e7dccd',
+        },
+      },
+    },
+  };
+</script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --orange: #FF5A00;
-    --orange-dim: #CC4800;
-    --black: #0A0A0A;
-    --dark: #111111;
-    --card: #161616;
-    --border: #2A2A2A;
-    --muted: #555555;
-    --text: #E8E8E8;
-    --white: #FFFFFF;
-  }
-
   html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
+  body { background:#faf6ef; color:#2a1f1a; font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3,h4 { font-family:'Fraunces',serif; letter-spacing:-0.02em; }
+  .grain { position:relative; }
+  .grain::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.06; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
   }
-
-  /* ---- NAV ---- */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 5vw;
-    border-bottom: 1px solid var(--border);
-    background: rgba(10,10,10,0.92);
-    backdrop-filter: blur(12px);
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    color: var(--white);
-    letter-spacing: 0.06em;
-  }
-  .nav-logo span { color: var(--orange); }
-
-  nav a.nav-cta {
-    background: var(--orange);
-    color: var(--white);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 0.6rem 1.4rem;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  nav a.nav-cta:hover { background: var(--orange-dim); }
-
-  /* ---- HERO ---- */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10rem 5vw 6rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    pointer-events: none;
-  }
-
-  .hero-accent {
-    position: absolute;
-    right: -10vw;
-    top: 15%;
-    width: 55vw;
-    height: 55vw;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,90,0,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 2rem;
-    height: 1px;
-    background: var(--orange);
-  }
-
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 11vw, 10rem);
-    line-height: 0.92;
-    color: var(--white);
-    letter-spacing: 0.02em;
-    max-width: 14ch;
-    position: relative;
-    z-index: 1;
-  }
-  .hero h1 .accent { color: var(--orange); }
-
-  .hero-sub {
-    margin-top: 2.5rem;
-    font-size: 1.15rem;
-    color: #999;
-    max-width: 44ch;
-    line-height: 1.7;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-actions {
-    margin-top: 3rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .btn-primary {
-    background: var(--orange);
-    color: var(--white);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 1rem 2.2rem;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    display: inline-block;
-  }
-  .btn-primary:hover { background: var(--orange-dim); transform: translateY(-1px); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 1rem 2.2rem;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
-
-  .hero-stats {
-    margin-top: 5rem;
-    display: flex;
-    gap: 3rem;
-    border-top: 1px solid var(--border);
-    padding-top: 2.5rem;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
-  }
-  .stat-item {}
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.8rem;
-    color: var(--white);
-    letter-spacing: 0.04em;
-    line-height: 1;
-  }
-  .stat-num span { color: var(--orange); }
-  .stat-label {
-    font-size: 0.78rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
-  }
-
-  /* ---- SECTION BASE ---- */
-  section {
-    padding: 7rem 5vw;
-    border-top: 1px solid var(--border);
-  }
-
-  .section-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 1.2rem;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.8rem, 6vw, 5.5rem);
-    color: var(--white);
-    line-height: 0.95;
-    letter-spacing: 0.02em;
-  }
-
-  /* ---- PROBLEM ---- */
-  .problem-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    margin-top: 4rem;
-    border: 1px solid var(--border);
-  }
-  .problem-item {
-    padding: 2.5rem;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .problem-item:nth-child(2n) { border-right: none; }
-  .problem-item:nth-last-child(-n+2) { border-bottom: none; }
-
-  .problem-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: var(--border);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-  .problem-item h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.6rem;
-  }
-  .problem-item p { font-size: 0.9rem; color: #777; line-height: 1.6; }
-
-  /* ---- WHAT YOU GET ---- */
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    margin-top: 4rem;
-  }
-  .feature-card {
-    background: var(--dark);
-    padding: 2.8rem 2.2rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.2s;
-  }
-  .feature-card:hover { background: var(--card); }
-  .feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 0;
-    background: var(--orange);
-    transition: height 0.3s;
-  }
-  .feature-card:hover::before { height: 100%; }
-
-  .feature-icon {
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.8rem;
-    color: var(--orange);
-    font-size: 1.2rem;
-  }
-
-  .feature-card h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    color: var(--white);
-    letter-spacing: 0.04em;
-    margin-bottom: 0.8rem;
-  }
-  .feature-card p { font-size: 0.88rem; color: #777; line-height: 1.65; }
-
-  /* ---- HOW IT WORKS ---- */
-  .steps {
-    margin-top: 4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--border);
-  }
-  .step {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    border-bottom: 1px solid var(--border);
-    align-items: stretch;
-  }
-  .step:last-child { border-bottom: none; }
-  .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    color: var(--border);
-    border-right: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 0;
-    transition: color 0.2s;
-  }
-  .step:hover .step-num { color: var(--orange); }
-  .step-content { padding: 2rem 2.2rem; }
-  .step-content h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.4rem;
-  }
-  .step-content p { font-size: 0.87rem; color: #777; }
-
-  /* ---- APPLY FORM ---- */
-  .apply-section {
-    background: var(--dark);
-  }
-  .apply-inner {
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  .apply-inner .section-title { text-align: center; }
-  .apply-inner .section-tag { text-align: center; }
-  .apply-sub {
-    text-align: center;
-    color: #777;
-    margin-top: 1rem;
-    font-size: 0.95rem;
-  }
-
-  form {
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  input, select, textarea {
-    background: var(--black);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 0.95rem;
-    padding: 0.85rem 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--orange);
-  }
-  input::placeholder, textarea::placeholder { color: #444; }
-  select { appearance: none; cursor: pointer; }
-  textarea { resize: vertical; min-height: 100px; }
-
-  select option { background: var(--black); }
-
-  .form-submit {
-    margin-top: 0.5rem;
-    background: var(--orange);
-    color: var(--white);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 1.1rem 2rem;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    width: 100%;
-  }
-  .form-submit:hover { background: var(--orange-dim); transform: translateY(-1px); }
-
-  .form-note {
-    text-align: center;
-    font-size: 0.78rem;
-    color: #555;
-    margin-top: 1rem;
-  }
-
-  /* ---- SUCCESS STATE ---- */
-  .success-msg {
-    display: none;
-    text-align: center;
-    padding: 3rem 2rem;
-    border: 1px solid var(--orange);
-    margin-top: 2rem;
-  }
-  .success-msg h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    color: var(--orange);
-    letter-spacing: 0.04em;
-  }
-  .success-msg p { color: #999; margin-top: 0.5rem; font-size: 0.9rem; }
-
-  .form-status {
-    min-height: 1.4rem;
-    text-align: center;
-    font-size: 0.82rem;
-    color: #888;
-    margin-top: 1rem;
-  }
-  .form-status.error { color: #ff7b45; }
-
-  /* ---- FOOTER ---- */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 3rem 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--white);
-    letter-spacing: 0.06em;
-  }
-  .footer-logo span { color: var(--orange); }
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-  }
-  .footer-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--orange); }
-  .footer-copy {
-    font-size: 0.78rem;
-    color: #444;
-    width: 100%;
-  }
-
-  /* ---- ANIMATIONS ---- */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hero-tag { animation: fadeUp 0.5s ease both; }
-  .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
-  .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
-  .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
-  .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
-
-  /* ---- RESPONSIVE ---- */
-  @media (max-width: 768px) {
-    .problem-grid { grid-template-columns: 1fr; }
-    .problem-item { border-right: none !important; }
-    .problem-item:last-child { border-bottom: none; }
-    .features-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .step { grid-template-columns: 60px 1fr; }
-    nav a.nav-cta { display: none; }
-    footer { flex-direction: column; }
-  }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:#2a1f1a; color:#faf6ef; padding:14px 22px; border-radius:9999px; font-size:14px; opacity:0; transition:all .3s; pointer-events:none; z-index:60; box-shadow:0 10px 30px rgba(0,0,0,.2); }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  details > summary { list-style:none; cursor:pointer; }
+  details > summary::-webkit-details-marker { display:none; }
+  details[open] .chev { transform:rotate(180deg); }
+  .chev { transition:transform .2s; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">FORGE<span>.</span></div>
-  <a class="nav-cta" href="#apply">Apply to Join</a>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-accent"></div>
-  <div class="hero-tag">India's Founder Community — Day 1</div>
-  <h1>Stop<br>Building<br><span class="accent">Alone.</span></h1>
-  <p class="hero-sub">FORGE is where India's founders meet their co-founders, discover hackathons, and turn ideas into real companies — together.</p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="#apply">Apply to Join</a>
-    <a class="btn-ghost" href="#how">How It Works</a>
+<!-- Header -->
+<header class="sticky top-0 z-40 border-b border-border/60 backdrop-blur bg-cream/80">
+  <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+    <a href="#top" class="font-display text-2xl font-black tracking-tight text-ink">FORGE<span class="text-terracotta">.</span></a>
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink/80">
+      <a href="#top" class="hover:text-terracotta">Home</a>
+      <a href="#services" class="hover:text-terracotta">Services</a>
+      <a href="#contact" class="hover:text-terracotta">Contact</a>
+    </nav>
+    <a href="#contact" class="inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-cream hover:bg-terracotta transition">Start growing</a>
   </div>
-  <div class="hero-stats">
-    <div class="stat-item">
-      <div class="stat-num">85<span>%</span></div>
-      <div class="stat-label">Founders struggle to find the right co-founder</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">Day <span>1</span></div>
-      <div class="stat-label">You're early. That means something.</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>0</span></div>
-      <div class="stat-label">Cost to join</div>
-    </div>
-  </div>
-</section>
+</header>
 
-<!-- PROBLEM -->
-<section>
-  <div class="section-tag">The Problem</div>
-  <div class="section-title">Why Great Ideas Die</div>
-  <div class="problem-grid">
-    <div class="problem-item">
-      <div class="problem-num">01</div>
-      <h3>No co-founder</h3>
-      <p>The best ideas need more than one person. Solo founders burn out. Teams ship.</p>
-    </div>
-    <div class="problem-item">
-      <div class="problem-num">02</div>
-      <h3>Isolated building</h3>
-      <p>No feedback, no accountability, no one to call at 2am when everything breaks.</p>
-    </div>
-    <div class="problem-item">
-      <div class="problem-num">03</div>
-      <h3>Missed opportunities</h3>
-      <p>Hackathons, grants, and competitions go by unnoticed. No one to share them.</p>
-    </div>
-    <div class="problem-item">
-      <div class="problem-num">04</div>
-      <h3>Ideas stay ideas</h3>
-      <p>Without the right people and resources, execution never happens. FORGE fixes this.</p>
+<main id="top">
+
+<!-- Hero -->
+<section class="grain relative overflow-hidden">
+  <div class="absolute inset-0 -z-10" style="background:linear-gradient(135deg,#faf6ef,rgba(232,168,124,.3),rgba(135,168,120,.3));"></div>
+  <div class="mx-auto max-w-6xl px-6 pt-20 pb-28 md:pt-32 md:pb-40">
+    <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-cream/60 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-ink/70">
+      <span class="h-1.5 w-1.5 rounded-full bg-terracotta"></span> For local businesses across India
+    </p>
+    <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black leading-[0.95]">
+      We Manage.<br/><span class="italic text-terracotta">You Create.</span>
+    </h1>
+    <p class="mt-8 max-w-2xl text-lg md:text-xl text-ink/75">
+      FORGE is the growth partner working beside you — turning strategy, design, technology and marketing into one system that moves your business forward.
+    </p>
+    <div class="mt-10 flex flex-wrap gap-4">
+      <a href="#contact" class="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-cream hover:bg-terracotta transition">Start your growth →</a>
+      <a href="#services" class="inline-flex items-center rounded-full border border-ink/20 px-7 py-3.5 text-sm font-medium text-ink hover:bg-ink/5">What we do</a>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section>
-  <div class="section-tag">What You Get</div>
-  <div class="section-title">Everything a<br>Founder Needs</div>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-      <h3>Co-Founder Matching</h3>
-      <p>Find your technical partner, your business co-founder, or the designer who makes your product real. Filter by skill, city, and domain.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-      </div>
-      <h3>Hackathons & Events</h3>
-      <p>Every competition, grant, and opportunity — curated and shared the moment it drops. Never miss a deadline again.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      </div>
-      <h3>Equity Partnerships</h3>
-      <p>Not just connections — real collaborations with structured equity frameworks. Build companies, not just contacts.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-      <h3>Founder Meetups</h3>
-      <p>Virtual and in-person events sponsored and organized by FORGE. Real conversations, real connections, real progress.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      </div>
-      <h3>Idea Validation</h3>
-      <p>Get brutal, honest feedback from people who are actually building — not family, not friends. Real founders, real feedback.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <h3>College Chapters</h3>
-      <p>FORGE inside your campus. Connect with ambitious students building the next generation of Indian startups.</p>
+<!-- Manifesto -->
+<section class="mx-auto max-w-4xl px-6 py-24 md:py-32">
+  <div class="border-l-2 border-sage pl-8 md:pl-12">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-forest">Our belief</p>
+    <h2 class="mt-4 font-display text-3xl md:text-5xl font-bold leading-tight">Every business begins with a dream.</h2>
+    <div class="mt-8 space-y-6 text-lg leading-relaxed text-ink/80">
+      <p>A dream to serve people, build something meaningful, create opportunities, and leave a lasting impact.</p>
+      <p>But as businesses grow, so do the challenges. Websites, branding, customer acquisition, digital presence, technology, marketing, operations — it begins to take time away from what truly matters.</p>
+      <p>Business owners shouldn't have to become marketers, designers, developers, strategists, or technology experts just to grow. They should be free to focus on their vision.</p>
+      <p class="font-display text-2xl md:text-3xl italic text-terracotta">That's where FORGE begins.</p>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="section-tag">The Process</div>
-  <div class="section-title">How FORGE Works</div>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-content">
-        <h3>Apply with what you're building</h3>
-        <p>Tell us your idea, your skills, and what kind of co-founder you're looking for. Takes 2 minutes.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-content">
-        <h3>Get personally onboarded</h3>
-        <p>Every founder is onboarded individually. We match you with relevant people before you even join the main community.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-content">
-        <h3>Connect with matched founders</h3>
-        <p>Direct introductions to founders whose skills, goals, and domains complement yours. No noise, no random networking.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <div class="step-content">
-        <h3>Build together with equity frameworks</h3>
-        <p>When you're ready to partner up, FORGE provides equity templates, vesting frameworks, and founder agreements.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">05</div>
-      <div class="step-content">
-        <h3>Turn your idea into a real company</h3>
-        <p>With the right co-founder, the right resources, and the right community — ideas become companies.</p>
-      </div>
-    </div>
+<!-- Pull quote -->
+<section class="grain relative bg-terracotta text-cream">
+  <div class="mx-auto max-w-5xl px-6 py-24 md:py-32 text-center">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-cream/70">We don't ask</p>
+    <p class="mt-4 font-display text-3xl md:text-5xl font-bold italic">"What service do you need?"</p>
+    <p class="mt-10 text-xs font-semibold uppercase tracking-[0.25em] text-cream/70">We ask</p>
+    <p class="mt-4 font-display text-4xl md:text-6xl font-black">"Where do you want your business to go?"</p>
   </div>
 </section>
 
-<!-- APPLY FORM -->
-<section id="apply" class="apply-section">
-  <div class="apply-inner">
-    <div class="section-tag">Join FORGE</div>
-    <div class="section-title">Apply to<br>the Community</div>
-    <p class="apply-sub">We personally onboard every founder. Fill this in — we'll get back to you within 24 hours.</p>
+<!-- Pillars -->
+<section class="mx-auto max-w-6xl px-6 py-24 md:py-32">
+  <div class="mx-auto max-w-2xl text-center">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-forest">How we work</p>
+    <h2 class="mt-4 font-display text-4xl md:text-5xl font-bold">Growth, when every part works together.</h2>
+    <p class="mt-5 text-lg text-ink/70">A website alone doesn't grow a business. A logo alone doesn't build trust. Real growth happens when every part works together with purpose.</p>
+  </div>
+  <div class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4" id="pillars"></div>
+</section>
 
-    <form id="applyForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="name" placeholder="Rahul Sharma" autocomplete="name" required>
-        </div>
-        <div class="form-group">
-          <label>City</label>
-          <input type="text" name="city" placeholder="Chennai" autocomplete="address-level2" required>
-        </div>
+<!-- Mission -->
+<section class="mx-auto max-w-5xl px-6 pb-24">
+  <div class="grain relative overflow-hidden rounded-3xl bg-forest p-10 md:p-16 text-cream">
+    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-30 blur-3xl" style="background:#c4654a;"></div>
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-cream/60">Our mission</p>
+    <h2 class="mt-4 max-w-3xl font-display text-3xl md:text-5xl font-bold leading-tight">To give every local business the same strategy, creativity and technology once reserved for the largest companies.</h2>
+    <p class="mt-6 max-w-2xl text-lg text-cream/80">Because great businesses shouldn't be limited by their size. They should be defined by their potential.</p>
+    <a href="#contact" class="mt-10 inline-flex items-center gap-2 rounded-full bg-cream px-7 py-3.5 text-sm font-medium text-ink hover:bg-terracotta hover:text-cream transition">Tell us where you want to go →</a>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services" class="grain relative">
+  <div class="absolute inset-0 -z-10" style="background:linear-gradient(to bottom,rgba(135,168,120,.2),#faf6ef);"></div>
+  <div class="mx-auto max-w-5xl px-6 pt-24 pb-12">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-forest">Our services</p>
+    <h2 class="mt-4 font-display text-5xl md:text-7xl font-black leading-[1]">We don't sell isolated services. <span class="italic text-terracotta">We build growth systems.</span></h2>
+    <p class="mt-8 max-w-2xl text-lg text-ink/75">Every engagement starts with your business and ends with measurable outcomes. Pick a single capability — or hand us the whole growth function.</p>
+  </div>
+  <div class="mx-auto max-w-6xl px-6 pb-20">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="services-grid"></div>
+  </div>
+</section>
+
+<!-- How we work -->
+<section class="bg-ink text-cream py-24 md:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="max-w-2xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-cream/50">How we work</p>
+      <h2 class="mt-4 font-display text-4xl md:text-5xl font-bold">Four steps. One team. No handoffs.</h2>
+    </div>
+    <div class="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-4" id="steps"></div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="grain relative">
+  <div class="absolute inset-0 -z-10" style="background:linear-gradient(135deg,rgba(232,168,124,.3),#faf6ef,rgba(135,168,120,.2));"></div>
+  <div class="mx-auto max-w-6xl grid gap-16 px-6 pt-24 pb-24 md:grid-cols-2">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.25em] text-forest">Let's talk</p>
+      <h2 class="mt-4 font-display text-5xl md:text-6xl font-black leading-[1]">Where do you want your business to go?</h2>
+      <p class="mt-6 max-w-md text-lg text-ink/75">Share a bit about your business. We reply within 24 hours with a clear next step — no pressure, no jargon.</p>
+      <ul class="mt-10 space-y-5 text-sm">
+        <li class="flex gap-3"><span class="text-terracotta">✉</span> <a href="mailto:forgeindiaoff@gmail.com" class="font-medium hover:text-terracotta">forgeindiaoff@gmail.com</a></li>
+        <li class="flex gap-3"><span class="text-terracotta">⌾</span> <span class="font-medium">forgeindia.site</span></li>
+        <li class="flex gap-3"><span class="text-terracotta">◉</span> <span class="font-medium">Serving local businesses across India</span></li>
+      </ul>
+    </div>
+    <form id="lead-form" class="rounded-3xl border border-border bg-white p-7 md:p-9 shadow-xl shadow-ink/5 space-y-5">
+      <label class="block"><span class="text-xs font-semibold uppercase tracking-widest text-ink/60">Your name *</span>
+        <input name="name" required placeholder="Anaya Sharma" class="mt-2 w-full rounded-xl border border-border bg-cream px-4 py-3 text-sm outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/20" /></label>
+      <label class="block"><span class="text-xs font-semibold uppercase tracking-widest text-ink/60">Business name</span>
+        <input name="business" placeholder="Anaya Studio" class="mt-2 w-full rounded-xl border border-border bg-cream px-4 py-3 text-sm outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/20" /></label>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="block"><span class="text-xs font-semibold uppercase tracking-widest text-ink/60">Email *</span>
+          <input name="email" type="email" required placeholder="you@business.com" class="mt-2 w-full rounded-xl border border-border bg-cream px-4 py-3 text-sm outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/20" /></label>
+        <label class="block"><span class="text-xs font-semibold uppercase tracking-widest text-ink/60">Phone / WhatsApp</span>
+          <input name="phone" type="tel" placeholder="+91…" class="mt-2 w-full rounded-xl border border-border bg-cream px-4 py-3 text-sm outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/20" /></label>
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-        </div>
-        <div class="form-group">
-          <label>Instagram Handle</label>
-          <input type="text" name="instagram" placeholder="@yourhandle">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>What are you building?</label>
-        <textarea name="idea" placeholder="Describe your idea in 2-3 lines. Even if it's early stage — that's fine." required></textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Your Primary Skill</label>
-          <select name="primary_skill" required>
-            <option value="" disabled selected>Select your skill</option>
-            <option>Developer / Engineer</option>
-            <option>Designer / Product</option>
-            <option>Business / Sales</option>
-            <option>Marketing / Growth</option>
-            <option>Finance / Operations</option>
-            <option>Domain Expert</option>
-            <option>Still figuring out</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Co-founder type you need</label>
-          <select name="looking_for">
-            <option value="" disabled selected>Looking for...</option>
-            <option>Technical co-founder</option>
-            <option>Business co-founder</option>
-            <option>Designer / Product</option>
-            <option>Marketing / Growth</option>
-            <option>Not looking yet — just the community</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" class="form-submit">Apply to Join FORGE →</button>
-      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
-      <p class="form-note">Serious founders only. We review every application personally.</p>
+      <label class="block"><span class="text-xs font-semibold uppercase tracking-widest text-ink/60">Where do you want your business to go?</span>
+        <textarea name="message" rows="4" placeholder="A line or two about your business and what you're hoping to change…" class="mt-2 w-full rounded-xl border border-border bg-cream px-4 py-3 text-sm outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/20"></textarea></label>
+      <button type="submit" class="w-full rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-cream hover:bg-terracotta transition">Send message</button>
+      <p class="text-xs text-ink/50">By submitting, you agree to be contacted by FORGE about your enquiry.</p>
     </form>
-
-    <div class="success-msg" id="successMsg">
-      <h3>Application Received 🔥</h3>
-      <p>We'll reach out personally within 24 hours. Welcome to FORGE.</p>
-    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">FORGE<span>.</span></div>
-  <div class="footer-links">
-    <a href="#apply">Join</a>
-    <a href="https://instagram.com/forge.india" target="_blank">Instagram</a>
-    <a href="#how">How It Works</a>
+<!-- FAQ -->
+<section class="mx-auto max-w-3xl px-6 py-24">
+  <div class="text-center">
+    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-forest">FAQ</p>
+    <h2 class="mt-3 font-display text-4xl md:text-5xl font-bold">Good questions.</h2>
   </div>
-  <div class="footer-copy">© 2026 FORGE — India's Founder Community. Built by founders, for founders.</div>
+  <div class="mt-10 divide-y divide-border border-y border-border" id="faqs"></div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-ink text-cream">
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <div class="grid gap-12 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <div class="font-display text-3xl font-black">FORGE<span class="text-terracotta">.</span></div>
+        <p class="mt-3 max-w-sm text-sm text-cream/70">We Manage. You Create. A business growth partner built for local businesses across India.</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-cream/50">Explore</h4>
+        <ul class="mt-4 space-y-2 text-sm">
+          <li><a href="#top" class="hover:text-terracotta">Home</a></li>
+          <li><a href="#services" class="hover:text-terracotta">Services</a></li>
+          <li><a href="#contact" class="hover:text-terracotta">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-cream/50">Reach us</h4>
+        <ul class="mt-4 space-y-2 text-sm">
+          <li><a href="mailto:forgeindiaoff@gmail.com" class="hover:text-terracotta">forgeindiaoff@gmail.com</a></li>
+          <li class="text-cream/70">forgeindia.site</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 flex flex-col md:flex-row md:items-center justify-between gap-3 border-t border-cream/10 pt-6 text-xs text-cream/50">
+      <p>© <span id="year"></span> FORGE India. All rights reserved.</p>
+      <p class="font-display italic">We Manage. You Create.</p>
+    </div>
+  </div>
 </footer>
 
+<div id="toast" class="toast"></div>
+
 <script>
-  const API_BASE = window.FORGE_API_BASE || '';
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  document.getElementById('applyForm').addEventListener('submit', async function(e) {
+  const pillars = [
+    { i:'◎', t:'Strategy', d:"Clear direction before any execution. We find what's holding growth back and chart the path forward." },
+    { i:'✦', t:'Presence', d:"Brand, website, identity — built so the right people trust you the moment they meet you." },
+    { i:'⚒', t:'Execution', d:"Design, technology, marketing, operations — delivered, not just discussed." },
+    { i:'↗', t:'Growth',   d:"Measure, learn, improve. We stay beside you as your business evolves." },
+  ];
+  document.getElementById('pillars').innerHTML = pillars.map(p => `
+    <div class="group rounded-2xl border border-border bg-white p-7 hover:-translate-y-1 hover:border-terracotta/40 hover:shadow-lg hover:shadow-terracotta/10 transition">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-sage/30 text-forest text-xl group-hover:bg-terracotta group-hover:text-cream transition">${p.i}</div>
+      <h3 class="mt-5 font-display text-xl font-bold">${p.t}</h3>
+      <p class="mt-2 text-sm leading-relaxed text-ink/70">${p.d}</p>
+    </div>`).join('');
+
+  const services = [
+    { i:'◎', t:'Strategy & Positioning', p:"Know where you're going — and why customers should choose you.", l:["Business & growth audit","Positioning and messaging","Roadmap with measurable goals"] },
+    { i:'✦', t:'Branding & Identity',    p:"A brand people trust at first glance.", l:["Logo & visual identity","Brand voice & guidelines","Print, packaging, signage"] },
+    { i:'⌾', t:'Web & Digital Presence', p:"A website that actually brings customers in.", l:["Fast, modern websites","Google Business & local SEO","Analytics that show what's working"] },
+    { i:'❖', t:'Marketing & Demand',     p:"Create demand, not just impressions.", l:["Performance ads (Meta, Google)","Content & social systems","Email & WhatsApp campaigns"] },
+    { i:'⚙', t:'Technology & Operations',p:"Run the business with calm, not chaos.", l:["Booking, billing, CRM setup","Workflow & automation","Internal tools that fit your team"] },
+    { i:'♡', t:'Growth Partnership',     p:"We don't disappear after launch.", l:["Monthly strategy & review","Continuous improvement","Priority support, one team"] },
+  ];
+  document.getElementById('services-grid').innerHTML = services.map(s => `
+    <article class="flex flex-col rounded-2xl border border-border bg-white p-7 hover:-translate-y-1 hover:border-terracotta/40 hover:shadow-lg hover:shadow-terracotta/10 transition">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta text-xl">${s.i}</div>
+      <h3 class="mt-5 font-display text-xl font-bold">${s.t}</h3>
+      <p class="mt-2 text-sm italic text-ink/70">${s.p}</p>
+      <ul class="mt-5 space-y-2 border-t border-border pt-5 text-sm text-ink/80">
+        ${s.l.map(i => `<li class="flex gap-2"><span class="mt-2 h-1.5 w-1.5 rounded-full bg-sage flex-none"></span>${i}</li>`).join('')}
+      </ul>
+    </article>`).join('');
+
+  const steps = [
+    { n:'01', t:'Understand', d:"We learn your business, customers, and what's holding growth back." },
+    { n:'02', t:'Strategize', d:"We design a clear plan — what to build, what to skip, what comes first." },
+    { n:'03', t:'Execute',    d:"Our team delivers across design, tech, and marketing as one." },
+    { n:'04', t:'Improve',    d:"We measure, learn, and keep raising the floor as you grow." },
+  ];
+  document.getElementById('steps').innerHTML = steps.map(s => `
+    <div class="border-t border-cream/15 pt-6">
+      <span class="font-display text-4xl font-black text-terracotta">${s.n}</span>
+      <h3 class="mt-3 font-display text-xl font-bold">${s.t}</h3>
+      <p class="mt-2 text-sm leading-relaxed text-cream/70">${s.d}</p>
+    </div>`).join('');
+
+  const faqs = [
+    { q:"Who is FORGE for?", a:"Local businesses in India ready to grow — shops, studios, clinics, restaurants, service businesses, D2C brands, and more." },
+    { q:"Do you sell one-off services like a website or a logo?", a:"We can, but our real value is when we work as your growth partner across strategy, brand, tech and marketing together." },
+    { q:"How quickly can we start?", a:"Most engagements kick off within a week of our first conversation, after we understand your goals." },
+    { q:"What does it cost?", a:"It depends on scope. After our first call we'll send a clear proposal with options that fit your stage." },
+  ];
+  document.getElementById('faqs').innerHTML = faqs.map(f => `
+    <details class="group py-5">
+      <summary class="flex items-center justify-between gap-4">
+        <span class="font-display text-lg font-semibold">${f.q}</span>
+        <span class="chev text-terracotta">▾</span>
+      </summary>
+      <p class="mt-3 text-base text-ink/75">${f.a}</p>
+    </details>`).join('');
+
+  function showToast(msg, ok=true){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = ok ? '#2a1f1a' : '#9b3a2a';
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 3200);
+  }
+
+  document.getElementById('lead-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const form = this;
-    const button = form.querySelector('button[type="submit"]');
-    const status = document.getElementById('formStatus');
-    const payload = Object.fromEntries(new FormData(form).entries());
-    payload.source = 'forge-landing';
-
-    status.textContent = 'Submitting...';
-    status.classList.remove('error');
-    button.disabled = true;
-    button.textContent = 'Submitting...';
-
-    try {
-      const response = await fetch(`${API_BASE}/api/landing/apply`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(result.error || 'Application could not be submitted');
-
-      form.style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
-    } catch (error) {
-      status.textContent = error.message || 'Something went wrong. Please try again.';
-      status.classList.add('error');
-      button.disabled = false;
-      button.textContent = 'Apply to Join FORGE →';
-    }
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    if (!data.name || !data.email) return showToast("Please enter your name and email.", false);
+    // Mailto fallback — opens user's email client with the enquiry pre-filled.
+    const body = `Name: ${data.name}%0D%0ABusiness: ${data.business||'-'}%0D%0AEmail: ${data.email}%0D%0APhone: ${data.phone||'-'}%0D%0A%0D%0A${(data.message||'').replace(/\n/g,'%0D%0A')}`;
+    window.location.href = `mailto:forgeindiaoff@gmail.com?subject=New enquiry from ${encodeURIComponent(data.name)}&body=${body}`;
+    showToast("Opening your email app — thanks!");
+    e.target.reset();
   });
 </script>
-
 </body>
 </html>

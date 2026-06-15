@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "forgeindia.sqlite3"
 PORT = int(os.environ.get("PORT", "8000"))
 HOST = os.environ.get("HOST", "127.0.0.1")
+CANONICAL_HOST = (os.environ.get("CANONICAL_HOST") or "forgeindia.site").strip()
 
 
 def now():
@@ -425,6 +426,15 @@ class App(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.end_headers()
 
+    def redirect_render_host(self):
+        host = (self.headers.get("Host") or "").split(":")[0].lower()
+        if CANONICAL_HOST and host.endswith(".onrender.com"):
+            self.send_response(308)
+            self.send_header("Location", f"https://{CANONICAL_HOST}{self.path}")
+            self.end_headers()
+            return True
+        return False
+
     def read_json(self):
         length = int(self.headers.get("Content-Length", "0"))
         if length == 0:
@@ -451,6 +461,8 @@ class App(BaseHTTPRequestHandler):
         return user
 
     def do_GET(self):
+        if self.redirect_render_host():
+            return
         parsed = urlparse(self.path)
         path = parsed.path
         if path == "/" or path == "/index.html" or path == "/landing.html":
@@ -536,6 +548,8 @@ class App(BaseHTTPRequestHandler):
         self.send_error(404)
 
     def do_POST(self):
+        if self.redirect_render_host():
+            return
         parsed = urlparse(self.path)
         path = parsed.path
         try:
