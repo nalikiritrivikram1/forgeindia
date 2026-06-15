@@ -66,7 +66,7 @@ def create_session(conn, user_id):
     return token
 
 
-def send_email(conn, to_email, subject, body):
+def send_email(conn, to_email, subject, body, reply_to=None):
     status = "queued"
     error = ""
     smtp_host = (os.environ.get("SMTP_HOST") or "").strip()
@@ -83,7 +83,7 @@ def send_email(conn, to_email, subject, body):
         try:
             msg = EmailMessage()
             msg["From"] = formataddr((sender_name, from_email))
-            msg["Reply-To"] = from_email
+            msg["Reply-To"] = reply_to or from_email
             msg["To"] = to_email
             msg["Subject"] = subject
             msg.set_content(body)
@@ -141,7 +141,7 @@ def send_email(conn, to_email, subject, body):
         try:
             msg = EmailMessage()
             msg["From"] = formataddr((sender_name, gmail_user))
-            msg["Reply-To"] = gmail_user
+            msg["Reply-To"] = reply_to or gmail_user
             msg["To"] = to_email
             msg["Subject"] = subject
             msg.set_content(body)
@@ -638,6 +638,7 @@ info@forgeindia.site
                         contact_to,
                         f"New FORGE enquiry: {name}",
                         enquiry_body,
+                        reply_to=email,
                     )
                     conn.commit()
                     if "failed" in (user_mail_status, admin_mail_status):
